@@ -72,6 +72,13 @@
     border: 1px solid var(--accent1);
     color: var(--neutral);
   }
+  /* Make ghost buttons visibly active when toggled (e.g., liked) */
+  .btn.ghost.active {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+    box-shadow: 0 4px 10px rgba(39,174,96,0.12);
+  }
   .badge { 
     display:inline-flex; align-items:center; gap:6px;
     padding: 6px 10px; border-radius: 999px; font-size: 12px;

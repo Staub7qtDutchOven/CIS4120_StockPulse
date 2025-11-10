@@ -9,6 +9,7 @@ export default function DiscussionFeed() {
   const [posts, setPosts] = useState(initialPosts)
   const [text, setText] = useState('')
   const [tag, setTag] = useState('Bullish')
+  const [likedIds, setLikedIds] = useState(new Set())
 
   const filtered = useMemo(() => {
     return active === 'All' ? posts : posts.filter(p => p.tag === active)
@@ -31,7 +32,17 @@ export default function DiscussionFeed() {
   }
 
   const like = (id) => {
-    setPosts(ps => ps.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p))
+    setPosts(ps => ps.map(p => {
+      if (p.id !== id) return p
+      const isLiked = likedIds.has(id)
+      return { ...p, likes: isLiked ? p.likes - 1 : p.likes + 1 }
+    }))
+    setLikedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
   }
 
   return (
@@ -82,9 +93,10 @@ export default function DiscussionFeed() {
               <button
                 type="button"
                 onClick={() => like(p.id)}
-                className="btn ghost"
+                className={`btn ghost ${likedIds.has(p.id) ? 'active' : ''}`}
                 style={{padding:'6px 10px'}}
                 title="Like"
+                aria-pressed={likedIds.has(p.id)}
               >
                 <ThumbsUp size={14} /> {p.likes}
               </button>
